@@ -1,0 +1,48 @@
+# Default ignored files
+*.iml
+*.ipr
+*.iws
+.idea
+.bsp
+out
+
+# scala
+target
+*.class
+*.log
+
+# SBT
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.history
+.cache
+.lib/
+
+# Eclipse
+build
+.classpath
+.project
+.settings
+org.scala-ide.sdt.core/META-INF/MANIFEST.MF
+org.scala-ide.sdt.update-site/site.xml`
+
+
+# for Mac
+.DS_Store
+
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# CodeStream ignored files
+/../../main\.idea/codestream.xml
+# Zeppelin ignored files
+/ZeppelinRemoteNotebooks/
+
