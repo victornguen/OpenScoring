@@ -1,6 +1,6 @@
 package service.dto
 
-import zio.json.JsonCodec
+import zio.json.{DeriveJsonCodec, JsonCodec}
 
 case class GetAccountsDTO(
     bankId: String,
@@ -10,5 +10,5 @@ case class GetAccountsDTO(
     interactionId: String)
 
 object GetAccountsDTO{
-    implicit val codec: JsonCodec[GetAccountsDTO] = zio.json.DeriveJsonCodec.gen[GetAccountsDTO]
+    implicit val codec: JsonCodec[GetAccountsDTO] = DeriveJsonCodec.gen[GetAccountsDTO]
 }

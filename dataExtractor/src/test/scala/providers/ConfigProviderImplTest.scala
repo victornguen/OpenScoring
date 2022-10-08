@@ -1,10 +1,10 @@
 package providers
 
-import service.UrlService
 import service.UrlServiceDefaultImplTest.{suite, test}
 import zio.{RIO, Scope, ZIO, ZLayer}
 import zio.test.{Spec, TestEnvironment, ZIOSpecDefault, assertTrue}
 import providers.ConfigProvider
+import service.services.UrlService
 import zio.test._
 
 object ConfigProviderImplTest extends ZIOSpecDefault {

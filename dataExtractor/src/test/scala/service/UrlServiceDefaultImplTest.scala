@@ -1,6 +1,7 @@
 package service
 
 import providers.{ConfigProvider, ConfigProviderImpl}
+import service.services.UrlService
 import zio.{RIO, Scope, ULayer, ZIO, ZLayer}
 import zio.test._
 

@@ -23,6 +23,8 @@ object ConfigProvider {
     def openApiConfig: ZIO[ConfigProvider, Throwable, Config] = ZIO.serviceWithZIO[ConfigProvider](_.openApiConfig)
 
     def appConfig: ZIO[ConfigProvider, Throwable, Config] = ZIO.serviceWithZIO[ConfigProvider](_.appConfig)
+
+    def loadConfig(path: String): ZIO[ConfigProvider, Throwable, Config] = ZIO.serviceWithZIO[ConfigProvider](_.loadConfig(path))
 }
 
 final case class ConfigProviderImpl(configName: String = "application.conf") extends ConfigProvider {

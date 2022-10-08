@@ -1,12 +1,15 @@
 package service.dto.openBanking
 
 import service.dto.openBanking.basic._
-import zio.json.{DeriveJsonCodec, JsonCodec}
+import zio.json.{DeriveJsonCodec, JsonCodec, jsonField}
 
-case class AccountsDTO(data: Data, links: LinksDTO, meta: MetaDTO)
-case class Data(account: List[Account])
+case class AccountsDTO(@jsonField("Data") data: AccountsDataDTO,
+                       @jsonField("Links") links: LinksDTO,
+                       @jsonField("Meta") meta: MetaDTO
+                      )
+case class AccountsDataDTO(@jsonField("Account") accounts: List[AccountDTO])
 
-case class Account(
+case class AccountDTO(
     accountId: String,
     status: String,
     statusUpdateDateTime: String,
@@ -21,12 +24,12 @@ object AccountsDTO {
     implicit val codec: JsonCodec[AccountsDTO] = DeriveJsonCodec.gen[AccountsDTO]
 }
 
-object Data {
-    implicit val codec: JsonCodec[Data] = DeriveJsonCodec.gen[Data]
+object AccountsDataDTO {
+    implicit val codec: JsonCodec[AccountsDataDTO] = DeriveJsonCodec.gen[AccountsDataDTO]
 }
 
-object Account {
-    implicit val codec: JsonCodec[Account] = DeriveJsonCodec.gen[Account]
+object AccountDTO {
+    implicit val codec: JsonCodec[AccountDTO] = DeriveJsonCodec.gen[AccountDTO]
 }
 
 object AccountDetails {

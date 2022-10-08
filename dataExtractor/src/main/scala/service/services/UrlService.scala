@@ -1,4 +1,4 @@
-package service
+package service.services
 
 import providers.ConfigProvider
 import service.syntax.ConfigObjectOps
