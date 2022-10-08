@@ -17,6 +17,12 @@ object Routes {
             else Response.text("Invalid username or password.").setStatus(Status.Unauthorized)
     }
 
-    val app: Http[Any, Nothing, Request, Response] = helloApp ++ loginApp
+    val decodeJWT: Http[Any, Nothing, Request, Response] = Http.collect[Request] {
+        case Method.GET -> !! / "decodejwt" / token =>
+            val decoded = jwtDecode(token)
+            Response.json(decoded.map(_.toJson).getOrElse(""))
+    }
+
+    val app = helloApp ++ decodeJWT ++ loginApp
 
 }
