@@ -23,7 +23,7 @@ object AccountInfoService {
         authDate: String,
         interactionId: String,
         additiveHeaders: Headers = Headers.empty
-      ) =
+      ): ZIO[EventLoopGroup with ChannelFactory with ConfigProvider with UrlService, Throwable, AccountsDTO] =
         withMethod(bankId, "/accounts") { uri =>
             val headers = defaultHeaders(bearerToken, customerIpAddress, authDate, interactionId) ++ additiveHeaders
             for {

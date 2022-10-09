@@ -13,7 +13,6 @@ lazy val root = (project in file("."))
         libraryDependencies ++= Seq(
             "dev.zio"                       %% "zio"                           % zioVersion,
             "dev.zio"                       %% "zio-json"                      % "0.3.0",
-//            "dev.zio"                       %% "zio-http"                      % zhttpVersion,
             "io.d11"                        %% "zhttp"                         % zhttpVersion,
             "com.softwaremill.sttp.client3" %% "async-http-client-backend-zio" % "3.8.2",
             "io.getquill"                   %% "quill-zio"                     % quillVersion,

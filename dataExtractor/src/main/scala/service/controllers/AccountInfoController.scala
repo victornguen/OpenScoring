@@ -16,7 +16,6 @@ object AccountInfoController {
         Http.collectZIO[Request] {
             case req @ Method.POST -> !! / "accounts" =>
                 for {
-//                    _ <- ZIO.
                     jsonBody <- req.body.asString.map(_.fromJson[GetAccountsDTO])
                     accounts <- sendDebugMessageOnFailure(jsonBody) { dto =>
                                     AccountInfoService.getAccountsFromBank(bankId = dto.bankId,
@@ -31,7 +30,7 @@ object AccountInfoController {
 
         }
 
-    def getBalances =
+    def getBalances: Http[EventLoopGroup with ChannelFactory with ConfigProvider with UrlService, Throwable, Request, Response] =
         Http.collectZIO[Request] {
             case req @ Method.POST -> !! / "balances" =>
                 for {

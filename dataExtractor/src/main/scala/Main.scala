@@ -1,12 +1,9 @@
 import providers.ConfigProvider
 import service.controllers.AccountInfoController
 import service.controllers.mock.AccountInfoControllerMock
-import service.services.{UrlService, UrlServiceDefaultImpl}
-import zhttp.http._
-import zhttp.service.{ChannelFactory, Client, EventLoopGroup, Server}
+import service.services.UrlService
+import zhttp.service.{ChannelFactory, EventLoopGroup, Server}
 import zio._
-import zio.Console.printLine
-import zhttp.service.EventLoopGroup
 
 object Main extends ZIOAppDefault {
     override def run =
@@ -22,7 +19,7 @@ object Main extends ZIOAppDefault {
         for {
             config <- ConfigProvider.loadConfig("application.conf")
             port    = config.getConfig("app").getInt("port")
-            _      <- Console.printLine("")
+            _      <- Console.printLine(s"Starting server on http://localhost:$port")
             _      <- Server.start(port, allRoutes)
         } yield ExitCode.success
 

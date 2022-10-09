@@ -12,10 +12,10 @@ import zio.json.{DecoderOps, EncoderOps, JsonCodec, JsonDecoder}
 
 object AccountInfoControllerMock {
 
-    def getAccounts =
+    def getAccounts: Http[Any, Throwable, Request, Response] =
         sendMockData[AccountsDTO]("accounts", Method.POST)(mockdata.accounts)
 
-    def getBalances =
+    def getBalances: Http[Any, Throwable, Request, Response] =
         sendMockData[BalancesDTO]("balances", Method.POST)(mockdata.balances)
 
     private def sendMockData[DtoType](route: String, method: Method)(json: String)(implicit codec: JsonCodec[DtoType]): Http[Any, Throwable, Request, Response] =
