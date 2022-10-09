@@ -23,6 +23,6 @@ object Routes {
             Response.json(decoded.map(_.toJson).getOrElse(""))
     }
 
-    val app = helloApp ++ decodeJWT ++ loginApp
+    val app = loginApp ++ helloApp ++ decodeJWT
 
 }
