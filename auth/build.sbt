@@ -1,5 +1,5 @@
 ThisBuild / scalaVersion     := "2.13.9"
-ThisBuild / version          := "0.1.0-SNAPSHOT"
+ThisBuild / version          := "0.1.1"
 ThisBuild / organization     := "com.example"
 ThisBuild / organizationName := "example"
 ThisBuild / name             := "OpenBankingAuthService"
