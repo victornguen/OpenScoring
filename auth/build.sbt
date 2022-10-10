@@ -2,6 +2,7 @@ ThisBuild / scalaVersion     := "2.13.9"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
 ThisBuild / organization     := "com.example"
 ThisBuild / organizationName := "example"
+ThisBuild / name             := "OpenBankingAuthService"
 
 lazy val root = (project in file("."))
     .settings(
@@ -19,3 +20,9 @@ lazy val root = (project in file("."))
         ),
         testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
     )
+
+enablePlugins(JavaAppPackaging)
+enablePlugins(DockerPlugin)
+
+Docker / packageName        := "openbanking-auth-service"
+Docker / dockerExposedPorts := Seq(8070)
