@@ -14,7 +14,8 @@ lazy val root = (project in file("."))
             "io.d11"               %% "zhttp"          % "2.0.0-RC10",
             "io.getquill"          %% "quill-zio"      % "4.3.0",
             "io.getquill"          %% "quill-jdbc-zio" % "4.3.0",
-            "com.h2database"        % "h2"             % "2.1.214"
+            "com.h2database"        % "h2"             % "2.1.214",
+            "com.github.t3hnar"    %% "scala-bcrypt"   % "4.3.0"
         ),
         testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
     )
