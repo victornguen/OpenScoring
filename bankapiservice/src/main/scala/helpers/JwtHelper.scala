@@ -3,6 +3,7 @@ package helpers
 import com.typesafe.config.ConfigFactory
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
 import pdi.jwt.JwtZIOJson
+import pdi.jwt.algorithms.JwtHmacAlgorithm
 
 import java.time.Clock
 import scala.util.Try
@@ -12,9 +13,9 @@ object JwtHelper {
 
     private val SECRET_KEY = Try(config.getString("secretKey")).getOrElse("secret")
 
-    val algorithm: JwtAlgorithm = JwtAlgorithm.fromString(
+    val algorithm: JwtHmacAlgorithm = JwtAlgorithm.fromString(
         Try(config.getString("jwtEncryption.algorithm")).getOrElse("HS512")
-    )
+    ).asInstanceOf[JwtHmacAlgorithm]
 
     implicit val clock: Clock = Clock.systemUTC
 
@@ -23,11 +24,11 @@ object JwtHelper {
         val claim = JwtClaim {
             json
         }.issuedNow.expiresIn(Int.MaxValue)
-        JwtZIOJson.encode(claim, SECRET_KEY, JwtAlgorithm.HS512)
+        JwtZIOJson.encode(claim, SECRET_KEY, algorithm)
     }
 
     def jwtDecode(token: String): Option[JwtClaim] = {
-        JwtZIOJson.decode(token, SECRET_KEY, Seq(JwtAlgorithm.HS512)).toOption
+        JwtZIOJson.decode(token, SECRET_KEY, Seq(algorithm)).toOption
     }
 
 }

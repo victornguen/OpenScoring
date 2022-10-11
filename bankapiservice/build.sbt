@@ -1,5 +1,5 @@
 ThisBuild / scalaVersion     := "2.13.9"
-ThisBuild / version          := "0.1.0-SNAPSHOT"
+ThisBuild / version          := "0.1.1"
 ThisBuild / organization     := "com.scalalazy"
 ThisBuild / organizationName := "example"
 
@@ -22,7 +22,6 @@ lazy val root = (project in file("."))
             "io.getquill"                   %% "quill-jdbc-zio"                % Version.quill,
             "com.h2database"                 % "h2"                            % "2.1.214",
             "com.typesafe"                   % "config"                        % "1.4.2",
-//            "com.github.jwt-scala"          %% "jwt-core"                      % Version.jwt,
             "com.github.jwt-scala"          %% "jwt-zio-json"                  % Version.jwt,
             "io.d11"                        %% "zhttp"                         % Version.zhttp % Test,
             "dev.zio"                       %% "zio-test"                      % Version.zio   % Test,
@@ -31,3 +30,9 @@ lazy val root = (project in file("."))
         ),
         testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
     )
+
+enablePlugins(JavaAppPackaging)
+enablePlugins(DockerPlugin)
+
+Docker / packageName        := "openbanking-bankapi-service"
+Docker / dockerExposedPorts := Seq(8111)
