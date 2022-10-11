@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  openbanking-auth-service:
+    image: "vnguen/openbanking-auth-service:0.1.0-SNAPSHOT"
+    ports:
+      - "8070:8070"

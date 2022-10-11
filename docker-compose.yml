@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  openbanking-auth-service:
+    image: "vnguen/openbanking-auth-service:0.1.1"
+    ports:
+      - "8070:8070"
+    networks:
+      - default-network
+  openbanking-bankapi-service:
+    image: "vnguen/openbanking-bankapi-service:0.1.1"
+    ports:
+      - "8111:8111"
+    networks:
+      - default-network
+  openscoring-data-extractor:
+    image: "vnguen/openscoring-data-extractor:0.1.2"
+    ports:
+      - "8280:8280"
+    networks:
+      - default-network
+
+networks:
+  default-network:
