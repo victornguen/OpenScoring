@@ -1,6 +1,6 @@
 package service.controllers.mock
 
-import helpers.RouteHelper.sendDebugMessageOnFailure
+import helpers.OpenApiRouteHelper.logDebugMessageOnFailure
 import providers.ConfigProvider
 import service.dto.openBanking._
 import service.dto._
@@ -23,7 +23,7 @@ object AccountInfoControllerMock {
             case method -> !! / "mock" / `route` =>
                 val jsonBody = json.fromJson[DtoType]
                 for {
-                    balances <- sendDebugMessageOnFailure(jsonBody) {
+                    balances <- logDebugMessageOnFailure(jsonBody) {
                                     json => ZIO.succeed(Response.json(json.toJson))
                                 }
                 } yield balances

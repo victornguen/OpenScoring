@@ -6,9 +6,8 @@ case class GetAccountsDTO(
     bankId: String,
     bearerToken: String,
     customerIpAddress: String,
-    authDate: String,
-    interactionId: String)
+    authDate: String)
 
-object GetAccountsDTO{
+object GetAccountsDTO {
     implicit val codec: JsonCodec[GetAccountsDTO] = DeriveJsonCodec.gen[GetAccountsDTO]
 }

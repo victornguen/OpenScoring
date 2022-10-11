@@ -1,5 +1,8 @@
 package helpers
 
+import service.dto.openBanking.AccountsDTO
+import zio.ZIO
+
 import scala.util.{Failure, Success, Try}
 
 object TypeHelper {
@@ -25,4 +28,7 @@ object TypeHelper {
         }
     }
 
+    implicit class ZioStringErrorOps[R, A](self: ZIO[R, String, A]){
+        def mapErrorToThrowable: ZIO[R, Throwable, A] = self.mapError(e => new Throwable(e))
+    }
 }

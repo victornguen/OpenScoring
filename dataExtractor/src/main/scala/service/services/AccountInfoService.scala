@@ -1,18 +1,14 @@
 package service.services
 
 import helpers.HttpHeadersHelper._
-import helpers.RouteHelper.withMethod
+import helpers.OpenApiRouteHelper.withMethod
+import helpers.TypeHelper._
 import providers.ConfigProvider
 import service.dto.openBanking._
-import service.syntax.stringToUriType
-import service.typed.Uri
 import zhttp.http._
 import zhttp.service.{ChannelFactory, Client, EventLoopGroup}
 import zio._
 import zio.json.DecoderOps
-import helpers.TypeHelper._
-
-import scala.util.Try
 
 object AccountInfoService {
 
@@ -34,7 +30,7 @@ object AccountInfoService {
                         )
                 data <- res.body.asString
                 _    <- ZIO.debug(data)
-                dto  <- ZIO.fromEither(data.fromJson[AccountsDTO].toEitherThrowableA)
+                dto  <- ZIO.from(data.fromJson[AccountsDTO]).mapErrorToThrowable
             } yield dto
         }
 
@@ -57,8 +53,7 @@ object AccountInfoService {
                         )
                 data <- res.body.asString
                 _    <- ZIO.debug(data)
-                dto  <- ZIO.fromEither(data.fromJson[BalancesDTO].toEitherThrowableA)
-
+                dto  <- ZIO.from(data.fromJson[BalancesDTO]).mapErrorToThrowable
             } yield dto
         }
 

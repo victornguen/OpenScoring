@@ -10,9 +10,9 @@ import helpers.TypeHelper._
 
 import scala.util.Try
 
-object RouteHelper {
+object OpenApiRouteHelper {
 
-    def withMethod[R, E, A](bankId: String, route: String)(f: Uri => ZIO[R,Throwable,A]): ZIO[R with ConfigProvider with UrlService, Throwable, A] = {
+    def withMethod[R, A](bankId: String, route: String)(f: Uri => ZIO[R,Throwable,A]): ZIO[R with ConfigProvider with UrlService, Throwable, A] = {
         val target = for {
             urls   <- UrlService.getDefaultUrls
             baseurl = urls.getOrElse(bankId, "")
@@ -22,17 +22,18 @@ object RouteHelper {
         target.flatMap(f)
     }
 
-    def withMethod[R, E, A](bankId: String, routeParts: String *)(f: Uri => ZIO[R, Throwable, A]): ZIO[R with ConfigProvider with UrlService, Throwable, A] = {
+    def withMethod[R, A](bankId: String, routeParts: String *)(f: Uri => ZIO[R, Throwable, A]): ZIO[R with ConfigProvider with UrlService, Throwable, A] = {
         val target = for {
             urls <- UrlService.getDefaultUrls
             baseurl <- ZIO.fromTry(Try(urls(bankId)))
             target = routeParts.foldLeft(Uri(baseurl))(_ / _)
+            _ <- zio.Console.printLine(target)
         } yield target
         target.flatMap(f)
     }
 
-    def sendDebugMessageOnFailure[A, R, E](either:  Either[String, A], message: String = "Failed to parse request body")(f: A => ZIO[R, E, Response]): ZIO[R, E, Response] = either match {
-        case Left(err) => ZIO.debug(s"$message $err").as(
+    def logDebugMessageOnFailure[A, R, E](either:  Either[String, A], message: String = "Failed to parse request body")(f: A => ZIO[R, E, Response]): ZIO[R, E, Response] = either match {
+        case Left(err) => ZIO.logError(s"$message $err").as(
             Response.text(err).setStatus(Status.BadRequest)
         )
         case Right(value) => f(value)

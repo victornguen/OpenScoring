@@ -7,9 +7,8 @@ case class GetBalancesDTO(
     accountId: String,
     bearerToken: String,
     customerIpAddress: String,
-    authDate: String,
-    interactionId: String)
+    authDate: String)
 
-object GetBalancesDTO{
+object GetBalancesDTO {
     implicit val codec: JsonCodec[GetBalancesDTO] = zio.json.DeriveJsonCodec.gen[GetBalancesDTO]
 }

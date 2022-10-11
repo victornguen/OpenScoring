@@ -1,7 +1,8 @@
 package service.controllers
 
-import helpers.RouteHelper
-import helpers.RouteHelper.sendDebugMessageOnFailure
+import helpers.OpenBankingApiHelper.generateInteractionId
+import helpers.OpenApiRouteHelper
+import helpers.OpenApiRouteHelper.logDebugMessageOnFailure
 import providers.ConfigProvider
 import service.dto.{GetAccountsDTO, GetBalancesDTO}
 import service.services.{AccountInfoService, UrlService}
@@ -17,12 +18,12 @@ object AccountInfoController {
             case req @ Method.POST -> !! / "accounts" =>
                 for {
                     jsonBody <- req.body.asString.map(_.fromJson[GetAccountsDTO])
-                    accounts <- sendDebugMessageOnFailure(jsonBody) { dto =>
+                    accounts <- logDebugMessageOnFailure(jsonBody) { dto =>
                                     AccountInfoService.getAccountsFromBank(bankId = dto.bankId,
                                                                            bearerToken = dto.bearerToken,
                                                                            customerIpAddress = dto.customerIpAddress,
                                                                            authDate = dto.authDate,
-                                                                           interactionId = dto.interactionId
+                                                                           interactionId = generateInteractionId
                                     ).map(account => Response.json(account.toJson))
                                 }
 
@@ -35,7 +36,7 @@ object AccountInfoController {
             case req @ Method.POST -> !! / "balances" =>
                 for {
                     jsonBody <- req.body.asString.map(_.fromJson[GetBalancesDTO])
-                    balances <- sendDebugMessageOnFailure(jsonBody) {
+                    balances <- logDebugMessageOnFailure(jsonBody) {
                                     dto =>
                                         AccountInfoService.getBalancesFromBank(
                                             bankId = dto.bankId,
@@ -43,7 +44,7 @@ object AccountInfoController {
                                             accountId = dto.accountId,
                                             customerIpAddress = dto.customerIpAddress,
                                             authDate = dto.authDate,
-                                            interactionId = dto.interactionId
+                                            interactionId = generateInteractionId
                                         ).map(balance => Response.json(balance.toJson))
                                 }
                 } yield balances

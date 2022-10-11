@@ -1,5 +1,5 @@
 ThisBuild / scalaVersion     := "2.13.9"
-ThisBuild / version          := "0.1.0-SNAPSHOT"
+ThisBuild / version          := "0.1.1"
 ThisBuild / organization     := "org.openscoring"
 ThisBuild / organizationName := "Scalalazy"
 
@@ -26,3 +26,9 @@ lazy val root = (project in file("."))
         ),
         testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
     )
+
+enablePlugins(JavaAppPackaging)
+enablePlugins(DockerPlugin)
+
+Docker / packageName        := "openscoring-data-extractor"
+Docker / dockerExposedPorts := Seq(8280)

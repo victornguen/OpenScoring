@@ -20,4 +20,6 @@ package object syntax {
 
     implicit def longToUriType(raw:Long): Uri = Uri(raw.toString)
 
+    import helpers.TypeHelper._
+
 }
