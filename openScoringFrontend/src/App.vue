@@ -1,11 +1,13 @@
 <template>
   <div id="app">
-    <div id="nav">
-       <router-link to="/">Отправленные заявки</router-link> |
-        <router-link to="/Recommendations">Рекомендации</router-link> |
-        <router-link to="/LoanProcessing">Оформление кредита</router-link>
-    </div>
-    <router-view/>
+    <v-app id="inspire">
+      <div id="nav">
+          <router-link to="/">Оформление кредита</router-link> |
+        <router-link to="/SentRequests">Отправленные заявки</router-link> |
+          <router-link to="/Recommendations">Рекомендации</router-link> 
+      </div>
+      <router-view/>
+    </v-app>
   </div>
 </template>
 
@@ -26,7 +28,7 @@
     color: #2c3e50;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: #3a87d3;
     }
   }
 }

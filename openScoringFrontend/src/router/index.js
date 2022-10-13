@@ -7,7 +7,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: "/",
+    path: "/SentRequests",
     name: "SentRequests",
     component: SentRequests,
   },
@@ -17,7 +17,7 @@ const routes = [
     component: Recommendations,
   },
   {
-    path: "/LoanProcessing",
+    path: "/",
     name: "LoanProcessing",
     component: LoanProcessing,
   },

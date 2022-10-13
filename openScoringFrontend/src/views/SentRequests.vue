@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="about">
+  <div>
     <h1>This is an SentRequests page</h1>
   </div>
   <div v-for="account in accounts" :key="account.accountId">
@@ -27,11 +27,4 @@ export default {
 </script>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
 </style>
