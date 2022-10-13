@@ -1,6 +1,6 @@
 package creditRates.data
 
-import utils.Years
+import utils.Month
 import zio.json.{DeriveJsonDecoder, DeriveJsonEncoder, JsonDecoder, JsonEncoder}
 
 /** Кредитный тариф состоит из:
@@ -8,7 +8,7 @@ import zio.json.{DeriveJsonDecoder, DeriveJsonEncoder, JsonDecoder, JsonEncoder}
   *   - кредитной ставки
   *   - нижней и верхней границы получения кредита
   */
-case class CreditRate(amountLowerBound: BigDecimal, amountUpperBound: BigDecimal, percentage: Double, timeLimitYearsLower: Years, timeLimitYearsUpper: Years)
+case class CreditRate(amountLowerBound: BigDecimal, amountUpperBound: BigDecimal, percentage: Double, timeLimitMonthLower: Month, timeLimitMonthUpper: Month)
 
 object CreditRate {
     implicit val encoder: JsonEncoder[CreditRate] = DeriveJsonEncoder.gen[CreditRate]

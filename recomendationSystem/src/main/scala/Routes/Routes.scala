@@ -27,7 +27,7 @@ object Routes {
             } yield r
     }
 
-    def creditRequestRoutes: Http[CreditRequestStorage, Throwable, Request, Response] = Http.collectZIO[Request] {
+    def creditRequestRoutes: Http[CreditRulesStorage with CreditRequestStorage, Throwable, Request, Response] = Http.collectZIO[Request] {
         case Method.GET -> !! / "requests"        => CreditRequestStorage.getRequests.map(r => Response.json(r.toJson))
         case req @ Method.POST -> !! / "requests" => for {
                 body <- req.bodyAsString.map(_.fromJson[CreditRequest])
@@ -40,6 +40,17 @@ object Routes {
                             case Right(value) => CreditRequestStorage.addRequest(value).map(id => Response.text(id))
                         }
             } yield r
+        case req @ Method.POST -> !! / "decision" => for {
+          body <- req.bodyAsString.map(_.fromJson[CreditRequest])
+          r    <- body match {
+            case Left(value)  => ZIO
+              .log(s"Failed to parse the input: $value")
+              .as(
+                Response.text(value).setStatus(Status.BadRequest)
+              )
+            case Right(value) => CreditRequestStorage.makeDecision(value).map(list => Response.json(list.toJson))
+          }
+        } yield r
     }
 
     def rulesRoutes: Http[CreditRulesStorage, Throwable, Request, Response] = Http.collectZIO[Request] {

@@ -1,6 +1,6 @@
 package creditRequests.data
 
-import utils.Years
+import utils.Month
 import zio.json.{DeriveJsonDecoder, DeriveJsonEncoder, JsonDecoder, JsonEncoder}
 
 /** Запрос пользователя на кредит состоит из:
@@ -10,7 +10,7 @@ import zio.json.{DeriveJsonDecoder, DeriveJsonEncoder, JsonDecoder, JsonEncoder}
   *   - месячный доход
   */
 case class CreditRequest(amount: BigDecimal,
-                         timeLimitYears: Years,
+                         timeLimitMonth: Month,
                          accountBalance: BigDecimal,
                          monthIncome: BigDecimal
                         )
