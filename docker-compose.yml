@@ -19,9 +19,15 @@ services:
     networks:
       - default-network
   openscoring-api-gateway:
-    image: "vnguen/openscoring-api-gateway:0.1.0"
+    image: "vnguen/openscoring-api-gateway:0.1.1"
     ports:
       - "8090:8090"
+    networks:
+      - default-network
+  openscoring-recomendation-system:
+    image: "vnguen/openscoring-recomendation-system:0.1.0"
+    ports:
+      - "8999:8999"
     networks:
       - default-network
 
