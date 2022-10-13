@@ -5,6 +5,6 @@ import zio._
 object Main extends ZIOAppDefault {
 
     override def run: ZIO[Any with ZIOAppArgs with Scope, Any, Any] =
-        Server.start(8070, Routes.app)
+        Server.start(8080, Routes.app).exitCode
 
 }
