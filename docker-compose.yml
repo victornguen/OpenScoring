@@ -18,6 +18,12 @@ services:
       - "8280:8280"
     networks:
       - default-network
+  openscoring-api-gateway:
+    image: "vnguen/openscoring-api-gateway:0.1.0"
+    ports:
+      - "8090:8090"
+    networks:
+      - default-network
 
 networks:
   default-network:
