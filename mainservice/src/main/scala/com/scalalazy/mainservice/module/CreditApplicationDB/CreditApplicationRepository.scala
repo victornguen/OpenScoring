@@ -16,6 +16,8 @@ object CreditApplicationRepository {
     def layer(ctx: PostgresJdbcContext[SnakeCase.type]): ULayer[LiveCreditApplicationRepository] =
         ZLayer.succeed(new LiveCreditApplicationRepository(ctx))
 
+    def get(id: String): ZIO[Service, ExpectedFailure, Option[CreditApplication]] = ZIO.serviceWithZIO[CreditApplicationRepository.Service](_.get(id))
+
     trait Service {
         def get(id: String): ZIO[Any, ExpectedFailure, Option[CreditApplication]]
 
