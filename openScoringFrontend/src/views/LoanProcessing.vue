@@ -6,6 +6,15 @@
     ref="form"
     lazy-validation
   >
+  <v-alert
+      v-model="alert"
+      dense
+      dismissible
+      prominent
+      type="success"
+      transition="slide-y-transition"
+    >
+    Данные успешно отправлены</v-alert>
     <v-text-field
       v-model="firstName"
       hide-details="auto"
@@ -99,10 +108,15 @@ export default {
     birthday: null,
     dateMenu: false,
     date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+    
+    alert: false,
+    timout: null,
   }),
 
   methods: {
     submit() {
+      clearTimeout(this.timout)
+
       this.firstName = null;
       this.surname = null;
       this.patronymic = null;
@@ -111,9 +125,21 @@ export default {
       this.birthday = null;
       this.dateMenu = null;
       this.date = null;
+      
+      this.alert = true;
+      this.timout = window.setTimeout(() => {
+        this.alert = false;
+      }, 2000)
     }
   }
 }
 </script>
 <style>
+.v-alert {
+  position: fixed;
+  right: 50px;
+  top: 50px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+}
 </style>

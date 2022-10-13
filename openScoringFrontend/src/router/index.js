@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import SentRequests from "../views/SentRequests.vue";
 import Recommendations from "../views/Recommendations.vue";
 import LoanProcessing from "../views/LoanProcessing.vue";
+import PermissionRequest from "../views/PermissionRequest.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -12,14 +13,19 @@ const routes = [
     component: SentRequests,
   },
   {
-    path: "/Recommendations",
+    path: "/recommendations",
     name: "Recommendations",
     component: Recommendations,
   },
   {
     path: "/",
-    name: "LoanProcessing",
+    name: "loanProcessing",
     component: LoanProcessing,
+  },
+  {
+    path: "/permissionRequest",
+    name: "PermissionRequest",
+    component: PermissionRequest,
   },
 ]
 
