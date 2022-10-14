@@ -4,7 +4,7 @@ organization             := "com.organization"
 scalafmtOnCompile        := true
 Test / fork              := true
 Test / parallelExecution := true
-ThisBuild / version      := "0.1.0"
+ThisBuild / version      := "0.1.1"
 
 lazy val Versions = new {
     val kindProjector = "0.13.2"
@@ -12,7 +12,7 @@ lazy val Versions = new {
     val http4s = "0.23.12"
     val zio = "2.0.2"
     val zhttp = "2.0.0-RC10"
-    val zioJson = "0.3.0"
+    val zioJson = "0.3.0-RC10"
     val zioInteropCats = "3.3.0"
     val circe = "0.14.3"
     val scalaTest = "3.0.8"

@@ -42,6 +42,7 @@ object Routes {
             } yield r
         case req @ Method.POST -> !! / "decision" => for {
           body <- req.bodyAsString.map(_.fromJson[CreditRequest])
+          _ <- zio.Console.printLine(body)
           r    <- body match {
             case Left(value)  => ZIO
               .log(s"Failed to parse the input: $value")
@@ -50,6 +51,7 @@ object Routes {
               )
             case Right(value) => CreditRequestStorage.makeDecision(value).map(list => Response.json(list.toJson))
           }
+          _ <- zio.Console.printLine(r.data.toString)
         } yield r
     }
 

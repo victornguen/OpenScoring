@@ -2,12 +2,16 @@ package com.scalalazy.mainservice
 
 import cats.effect.ExitCode
 import cats.effect.unsafe.implicits.global
+import com.scalalazy.mainservice.Main.creditApplicationResultRoute
 import com.scalalazy.mainservice.model.config.{Application, TSConfigLoader}
-import com.scalalazy.mainservice.module.CreditApplicationDB.{CreditApplicationRepository, InMemoryCreditApplicationRepository}
+import com.scalalazy.mainservice.module.CreditApplicationDB.{
+    CreditApplicationRepository,
+    InMemoryCreditApplicationRepository
+}
 import com.scalalazy.mainservice.module.PersonDB.{InMemoryPersonRepository, PersonRepository}
 import com.scalalazy.mainservice.module.UserDB.{InMemoryUserRepository, UserRepository}
 import com.scalalazy.mainservice.module.logger.{Logger => MyLogger}
-import com.scalalazy.mainservice.route.{CreditApplicationRoute, UserRoute}
+import com.scalalazy.mainservice.route.{CreditApplicationResultRoutes, CreditApplicationRoute, UserRoute}
 import com.typesafe.config.ConfigFactory
 import eu.timepit.refined.auto._
 import io.getquill.{PostgresJdbcContext, SnakeCase}
@@ -21,25 +25,35 @@ import sttp.tapir.server.ziohttp.ZioHttpInterpreter
 import sttp.tapir.swagger.SwaggerUI
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
 import zhttp.http.{Http, Request, Response}
+import zhttp.service.{ChannelFactory, EventLoopGroup}
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 object Main extends CatsApp {
     import cats.effect.unsafe.implicits.global
-    type AppEnvironment = UserRepository with MyLogger with PersonRepository with CreditApplicationRepository
+    type AppEnvironment = UserRepository
+        with MyLogger with PersonRepository with CreditApplicationRepository with ChannelFactory
+        with CreditApplicationRepository with EventLoopGroup
 
     private val userRoute = new UserRoute[AppEnvironment]
     private val creditApplicationRoute = new CreditApplicationRoute[AppEnvironment]
+    private val creditApplicationResultRoute = new CreditApplicationResultRoutes[AppEnvironment]
 //  private val personRoute = new PersonRoute[AppEnvironment]
 
     lazy val openAPIDoc: OpenAPI = OpenAPIDocsInterpreter()
-        .toOpenAPI(userRoute.getEndPoints ++ creditApplicationRoute.getEndPoints, "OpenScoring", "0.1.0")
+        .toOpenAPI(
+          userRoute.getEndPoints ++ creditApplicationRoute.getEndPoints ++ creditApplicationResultRoute.getEndpoints,
+          "OpenScoring",
+          "0.1.0")
 
     val swaggerFromOpenApi: Http[Any, Throwable, Request, Response] =
         ZioHttpInterpreter().toHttp(SwaggerUI[Task](openAPIDoc.toYaml))
 
-    private val httpApp = userRoute.getRoutes ++ creditApplicationRoute.getRoutes ++ swaggerFromOpenApi
+    private val httpApp = userRoute.getRoutes ++
+        creditApplicationRoute.getRoutes ++
+        creditApplicationResultRoute.getRoutes ++
+        swaggerFromOpenApi
 
 //    override def run = for{
 //        conf <- config
@@ -53,11 +67,14 @@ object Main extends CatsApp {
 //    } yield result
 
     def run = app.provide(
-          InMemoryUserRepository.layer,
-          InMemoryCreditApplicationRepository.layer,
-          InMemoryPersonRepository.layer,
-          module.logger.Logger.layer
-        )
+      InMemoryUserRepository.layer,
+      InMemoryCreditApplicationRepository.layer,
+      InMemoryPersonRepository.layer,
+      module.logger.Logger.layer,
+      Scope.default,
+      EventLoopGroup.default,
+      ChannelFactory.auto
+    )
 
     val config: ZIO[Any, Throwable, Application] = for {
         applicationConfigIO <- ZIO.fromTry(Try(Application.getConfig.load[cats.effect.IO]))

@@ -3,3 +3,5 @@ package com.scalalazy.mainservice.model
 sealed abstract class ExpectedFailure extends Exception
 case class DBFailure(throwable: Throwable) extends ExpectedFailure
 case class NotFoundFailure(message: String) extends ExpectedFailure
+
+case class ConfigError(message: String = "") extends ExpectedFailure

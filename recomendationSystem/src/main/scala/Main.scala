@@ -7,7 +7,7 @@ import zio._
 
 object Main extends ZIOAppDefault {
     override def run: ZIO[Any with ZIOAppArgs with Scope, Any, Any] = Server
-        .start(8080, Routes.rulesRoutes ++ Routes.rateRoutes ++ Routes.creditRequestRoutes)
+        .start(8999, Routes.rulesRoutes ++ Routes.rateRoutes ++ Routes.creditRequestRoutes)
         .provide(InMemoryCreditRateStorage.live, InMemoryCreditRulesStorage.live, InMemoryCreditRequestsStorage.live)
 
 }
