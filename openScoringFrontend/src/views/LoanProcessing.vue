@@ -11,10 +11,59 @@
       dense
       dismissible
       prominent
-      type="success"
+      :type="alertType"
       transition="slide-y-transition"
     >
-    Данные успешно отправлены</v-alert>
+    {{ alertMessage }}</v-alert>
+    <v-col class="px-0">
+      <v-slider
+        messages="от 20 000 до 10 000 000"
+        label="Сумма кредита"
+        class="align-center"
+        v-model="sum"
+        :max="10000000"
+        :min="min"
+        :step="step"
+      >
+        <template v-slot:append>
+          <v-text-field
+            v-model="sum"
+            class="mt-0 pt-0"
+            hide-details
+            single-line
+            type="number"
+            style="width: 90px"
+          ></v-text-field>
+        </template>
+      </v-slider>
+    </v-col>
+    <v-col class="px-0">
+    <v-slider
+        messages="от 6 месяцев до 12 месяцев"
+        label="Срок кредита"
+        class="align-center"
+        v-model="periodInMonth"
+        :max="12"
+        :min="6"
+        :step="1"
+      >
+        <template v-slot:append>
+          <v-text-field
+            v-model="periodInMonth"
+            class="mt-0 pt-0"
+            hide-details
+            single-line
+            type="number"
+            style="width: 90px"
+          ></v-text-field>
+        </template>
+      </v-slider>
+    </v-col>
+    <v-select
+      v-model="currency"
+      :items="items"
+      label="Валюта"
+    ></v-select>
     <v-text-field
       v-model="firstName"
       hide-details="auto"
@@ -22,13 +71,19 @@
       required
     ></v-text-field>
     <v-text-field
-      v-model="surname"
+      v-model="middleName"
       label="Фамилия"
       required
     ></v-text-field>
     <v-text-field
-      v-model="patronymic"
-      label="Отчестов"
+      v-model="lastName"
+      label="Отчестово"
+      required
+    ></v-text-field>
+
+    <v-text-field
+      v-model="mobileNumber"
+      label="Телефон"
       required
     ></v-text-field>
 
@@ -46,15 +101,15 @@
         ref="menu"
         v-model="dateMenu"
         :close-on-content-click="false"
-        :return-value.sync="date"
+        :return-value.sync="dateOfBirth"
         transition="scale-transition"
         offset-y
         min-width="auto"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
-            v-model="date"
-            label="Picker in menu"
+            v-model="dateOfBirth"
+            label="Дата рождения"
             prepend-icon="mdi-calendar"
             readonly
             v-bind="attrs"
@@ -62,7 +117,7 @@
           ></v-text-field>
         </template>
         <v-date-picker
-          v-model="date"
+          v-model="dateOfBirth"
           no-title
           scrollable
         >
@@ -77,7 +132,7 @@
           <v-btn
             text
             color="primary"
-            @click="$refs.menu.save(date)"
+            @click="$refs.menu.save(dateOfBirth)"
           >
             ОК
           </v-btn>
@@ -98,38 +153,105 @@
 </v-container>
 </template>
 <script>
+import RequestService from "@/services/RequestService";
 export default {
-  data: () => ({
-    firstName: null,
-    surname: null,
-    patronymic: null,
-    phone: null,
-    email: null,
-    birthday: null,
+  name: 'LoanProcessing',
+  data: () =>   ({
+    fields: [
+      'sum',
+      'currency',
+      'periodInMonth',
+      'firstName',
+      'middleName',
+      'lastName',
+      'mobileNumber',
+      'email',
+      'dateOfBirth',
+    ],
+
+    currency: "",
+    sum: 0,
+    periodInMonth: 0,
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    mobileNumber: "",
+    email: "",
+    dateOfBirth: null,
+
     dateMenu: false,
-    date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-    
     alert: false,
     timout: null,
+    items:["RUB", "USD", "EUR", "JPY", "NZD", "SEK", "GBP", "DKK", "NOK", "SGD", "CZK", "HKD", "MXN", "TRY", "CNH"],
+    alertType: 'success',
+    alertMessage: null,
+    successMessage: 'Данные успешно отправлены',
+    errorMessage: 'Ошибка',
   }),
 
+  computed: {
+    step() {
+      if (this.sum < 1000000) {
+        return 10000
+      }
+      return 100000
+    },
+
+    min() {
+      if (this.sum < 1000000) {
+        return 20000
+      }
+      return 0
+    },
+  },
+
   methods: {
-    submit() {
+    formatDate (date) {
+        if (!date) return null
+
+        const [year, month, day] = date.split('-')
+        return `${day}.${month}.${year}`
+      },
+
+    async submit() {
       clearTimeout(this.timout)
 
-      this.firstName = null;
-      this.surname = null;
-      this.patronymic = null;
-      this.phone = null;
-      this.email = null;
-      this.birthday = null;
-      this.dateMenu = null;
-      this.date = null;
-      
-      this.alert = true;
-      this.timout = window.setTimeout(() => {
-        this.alert = false;
-      }, 2000)
+      const sendData = {};
+      this.fields.forEach(x => {
+        if (
+         x === 'dateOfBirth'
+        ) {
+          sendData[x] = this.formatDate(this[x])
+        } else {
+          sendData[x] = this[x]
+        }
+        })
+        try {
+          const response = await RequestService.createCreditApplication(sendData)
+          this.alertMessage = this.successMessage;
+          this.alertType = "success"
+
+          this.$store.dispatch('addApplication', {applicationId: response.createdCreditApplicationId})
+        } catch(e) {
+          this.alertMessage = `${this.errorMessage}: ${e}`;
+          this.alertType = "error"
+        } finally {
+          this.sum = 0,
+          this.currency = "",
+          this.periodInMonth = 0,
+          this.firstName = "";
+          this.middleName = "";
+          this.lastName = "";
+          this.mobileNumber = "";
+          this.email = "";
+          this.dateOfBirth = null
+          
+          this.dateMenu = null;
+          this.alert = true;
+          this.timout = window.setTimeout(() => {
+            this.alert = false;
+          }, 2000)
+        }
     }
   }
 }

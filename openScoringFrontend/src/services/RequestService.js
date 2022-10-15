@@ -12,9 +12,9 @@ export default class RequestService {
   static async loadAccountsAsync() {
     try {
       const result = await axios.get("/accounts", {
-        headers: {
-          ...this.config,
-        },
+        // headers: {
+        //   ...this.config,
+        // },
       });
 
       if (result.data) {
@@ -24,5 +24,58 @@ export default class RequestService {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  static async loadApplication(id) {
+    try {
+      const result = await axios.get(`/creditapplication/${id}`, {
+      });
+
+      if (result.data) {
+        console.log(result.data)
+        return result.data;
+      }
+      console.log('Unknown error')
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  static async removeApplication(id) {
+    try {
+      const result = await axios.delete(`/creditapplication/${id}`, {
+      });
+
+      if (result.status === 200) {
+        return true;
+      }
+      console.log('Unknown error')
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  static async loadApplicationDetails(id) {
+    try {
+      const result = await axios.get(`/creditapplication/result/${id}`, {
+      });
+
+      if (result.data) {
+        return result.data;
+      }
+      console.log('Unknown error')
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  static async createCreditApplication(body) {
+      const result = await axios.post("/creditapplication", {
+        ...body
+      });
+
+      if (result.data) {
+        return result.data
+      }
   }
 }

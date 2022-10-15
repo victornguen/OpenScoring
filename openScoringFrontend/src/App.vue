@@ -1,11 +1,10 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <div id="nav">
-          <router-link to="/">Оформление кредита</router-link> |
-          <router-link to="/permissionRequest">Авторизация</router-link> |
-        <router-link to="/sentRequests">Отправленные заявки</router-link> |
-          <router-link to="/recommendations">Рекомендации</router-link>
+      <div id="nav" style="font-size: 20px;">
+        <router-link to="/permissionRequest">Авторизация</router-link> |
+        <router-link to="/">Оформление кредита</router-link> |
+        <router-link to="/sentRequests">Отправленные заявки</router-link>
       </div>
       <router-view/>
     </v-app>
